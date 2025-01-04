@@ -16,6 +16,8 @@ public class PuzzleConfig : MonoBehaviour
 
     private TextMeshProUGUI serialNumber;
 
+    private BlinkLight blinkLight;
+
     public Material WireRed;
     public Material WireBlack;
     public Material WireBlue;
@@ -35,6 +37,10 @@ public class PuzzleConfig : MonoBehaviour
             if (obj.name.StartsWith("Wire_"))
             {
                 allWires.Add(obj.gameObject);
+            }
+            if (obj.name.StartsWith("Lamp"))
+            {
+                blinkLight = obj.gameObject.GetComponent<BlinkLight>();
             }
         }
 
@@ -79,9 +85,9 @@ public class PuzzleConfig : MonoBehaviour
             allWires[i].SetActive(false);
         }
 
-        // Add materials to wires
+        // Add materials to wires WireBlack, WireBlue, WireWhite, WireYellow, WireRed, WireRed, WireRed, WireBlue, WireBlue, WireBlue
 
-        Material[] materials = new Material[] { WireBlack, WireBlue, WireWhite, WireYellow, WireRed, WireRed, WireRed, WireBlue };
+        Material[] materials = new Material[] { WireBlack, WireYellow, WireWhite, WireYellow, WireRed, WireYellow };
         List<Material> assignMaterials = new List<Material>();
         foreach (GameObject wire in wires)
         {
@@ -130,15 +136,21 @@ public class PuzzleConfig : MonoBehaviour
                     int id = -1;
                     foreach (var wire in wires)
                     {
-                        if (wire.GetComponent<Renderer>().material.Equals(WireBlue))
+                        if (wire.GetComponent<Renderer>().material.ToString().Contains("blue"))
                         {
-                            if (wire.GetComponent<WireHandler>().id > id)
+                            WireHandler wireHandler = wire.GetComponent<WireHandler>();
+                            if (wireHandler != null)
                             {
                                 w = wire;
-                                id = wire.GetComponent<WireHandler>().id;
+                                id = wireHandler.id;
+                            }
+                            else
+                            {
+                                Debug.Log("wireHandler != null");
                             }
                         }
                     }
+
                     setWireSolution(true, w);
                     return;
                 }
@@ -151,7 +163,7 @@ public class PuzzleConfig : MonoBehaviour
 
             case 4:
 
-                // Case 1: If there is more than one red wire and the last digit of the serial number is odd, cut the last red wire.
+                // Case 1: If there is more than one red wire and the last digit of the serial number is odd, cut the last red wire. works
 
                 int redCount = 0;
                 foreach (var material in assignMaterials)
@@ -167,7 +179,7 @@ public class PuzzleConfig : MonoBehaviour
                     int id = -1;
                     foreach (var wire in wires)
                     {
-                        if (wire.GetComponent<Renderer>().material.Equals(WireRed))
+                        if (wire.GetComponent<Renderer>().material.ToString().Contains("red"))
                         {
                             if (wire.GetComponent<WireHandler>().id > id)
                             {
@@ -180,15 +192,14 @@ public class PuzzleConfig : MonoBehaviour
                     return;
                 }
 
-                // Case 2: Otherwise, if the last wire is yellow and there are no red wires, cut the first wire.
-
-                if(wires[3].GetComponent<Renderer>().material.Equals(WireYellow) && !assignMaterials.Contains(WireRed))
+                // Case 2: Otherwise, if the last wire is yellow and there are no red wires, cut the first wire. works
+                if(wires[3].GetComponent<Renderer>().material.ToString().Contains("yellow") && !assignMaterials.Contains(WireRed))
                 {
                     setWireSolution(true, wires[0]);
                     return;
                 }
 
-                // Case 3: Otherwise, if there is exactly one blue wire, cut the first wire.
+                // Case 3: Otherwise, if there is exactly one blue wire, cut the first wire. works
 
                 if (assignMaterials.Count(i => EqualityComparer<Material>.Default.Equals(i, WireBlue)) == 1)
                 {
@@ -204,7 +215,7 @@ public class PuzzleConfig : MonoBehaviour
                     return;
                 }
 
-                // Case 5: Otherwise, cut the second wire.
+                // Case 5: Otherwise, cut the second wire. works
 
                 setWireSolution(true, wires[1]);
 
@@ -258,10 +269,12 @@ public class PuzzleConfig : MonoBehaviour
     {
         if (result)
         {
+            blinkLight.LightLamp(Color.green);
             Debug.Log("Win");
         }
         else
         {
+            blinkLight.LightLamp(Color.red);
             Debug.Log("Loss");
         }
     }
@@ -278,9 +291,10 @@ public class PuzzleConfig : MonoBehaviour
         // Try to parse the text into an integer
         if (int.TryParse(textComponent.text, out int number))
         {
+            Debug.Log("Out " + number);
             // Get the last digit of the number
             int lastDigit = number % 10;
-
+            Debug.Log("lastDigit " + lastDigit);
             // Check if the last digit is odd
             return lastDigit % 2 != 0;
         }

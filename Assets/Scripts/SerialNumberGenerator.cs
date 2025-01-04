@@ -7,9 +7,7 @@ public class SerialNumberGenerator : MonoBehaviour
 {
     // Reference to the TextMeshPro component
     public TextMeshProUGUI numberText;
-
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         // Generate a random 3-digit number
         int randomNumber = GenerateRandomNumber();
