@@ -8,6 +8,8 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using System.Security.Cryptography;
+using static UnityEngine.ParticleSystem;
+using System.ComponentModel;
 
 public class PuzzleConfig : MonoBehaviour
 {
@@ -67,7 +69,7 @@ public class PuzzleConfig : MonoBehaviour
         }
 
         // Place wires
-        numberOfWires = Random.Range(3, 5);//3 or 4, (3,7) -> 3,4,5,6
+        numberOfWires = Random.Range(3, 7);//3 or 4, (3,7) -> 3,4,5,6
         PlaceWires(numberOfWires);
     }
 
@@ -218,6 +220,70 @@ public class PuzzleConfig : MonoBehaviour
                 // Case 5: Otherwise, cut the second wire. works
 
                 setWireSolution(true, wires[1]);
+
+                break;
+
+            case 5:
+
+                //If the last wire is black and the last digit of the serial number is odd, cut the fourth wire.
+
+                if (wires[4].GetComponent<Renderer>().material.ToString().Contains("black") && IsLastDigitOdd(serialNumber))
+                {
+                    setWireSolution(true, wires[3]);
+                    return;
+                }
+
+                //Otherwise, if there is exactly one red wire and there is more than one yellow wire, cut the first wire.
+
+                if (assignMaterials.Count(i => EqualityComparer<Material>.Default.Equals(i, WireRed)) == 1 && assignMaterials.Count(i => EqualityComparer<Material>.Default.Equals(i, WireYellow)) > 1)
+                {
+                    setWireSolution(true, wires[0]);
+                    return;
+                }
+
+                //Otherwise, if there are no black wires, cut the second wire.
+
+                if (!assignMaterials.Contains(WireBlack))
+                {
+                    setWireSolution(true, wires[1]);
+                    return;
+                }
+
+                //Otherwise, cut the first wire
+
+                setWireSolution(true, wires[0]);
+
+                break;
+
+            case 6:
+
+                //If there are no yellow wires and the last digit of the serial number is odd, cut the third wire.
+
+                if (!assignMaterials.Contains(WireYellow) && IsLastDigitOdd(serialNumber))
+                {
+                    setWireSolution(true, wires[2]);
+                    return;
+                }
+
+                //Otherwise, if there is exactly one yellow wire and there is more than one white wire, cut the fourth wire.
+
+                if (assignMaterials.Count(i => EqualityComparer<Material>.Default.Equals(i, WireYellow)) == 1 && assignMaterials.Count(i => EqualityComparer<Material>.Default.Equals(i, WireWhite)) > 1)
+                {
+                    setWireSolution(true, wires[3]);
+                    return;
+                }
+
+                //Otherwise, if there are no red wires, cut the last wire.
+
+                if (!assignMaterials.Contains(WireRed))
+                {
+                    setWireSolution(true, wires[5]);
+                    return;
+                }
+
+                //Otherwise, cut the fourth wire.
+
+                setWireSolution(true, wires[3]);
 
                 break;
 
