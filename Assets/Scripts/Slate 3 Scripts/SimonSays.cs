@@ -7,7 +7,7 @@ public class SimonSays : MonoBehaviour
     [System.Serializable]
     public class LightCube
     {
-        public GameObject cube; // Kocka koja sadrûi Light komponentu i Renderer
+        public GameObject cube; // Kocka koja sadrÔøΩi Light komponentu i Renderer
         public Material highlightMaterial;
         [HideInInspector]
         public Material defaultMaterial;
@@ -30,25 +30,25 @@ public class SimonSays : MonoBehaviour
     public GameObject feedbackLight;
     public GameObject endGameLight;
     public Material correctMaterial; // Zeleni materijal za ispravan odgovor
-    public Material incorrectMaterial; // Crveni materijal za netoËan odgovor
+    public Material incorrectMaterial; // Crveni materijal za netocan odgovor
     public Material endGameLightSuccessMaterial; // Materijal za "endGameLight" kada svijetli zeleno
     [Range(0, 3)]
-    public int[] correctAnswers; // Lista tocnih odgovora za svaku sekvencu (1 = prvo svjetlo, 2 = drugo itd.)
+    private int[] correctAnswers; // Lista tocnih odgovora za svaku sekvencu (1 = prvo svjetlo, 2 = drugo itd.)
 
     private List<int[]> allSequences; // Automatski generirane sekvence
     private int currentSequenceIndex; // Indeks trenutne sekvence u bazenu
     private float speedMultiplier = 1f; // Faktor ubrzanja sekvence (1 = normalna brzina)
     private int correctLightIndex; // Tocan odgovor za trenutnu sekvencu
-    private bool gameRunning = false; // SprjeËava visestruko pokretanje
+    private bool gameRunning = false; // Sprjecava visestruko pokretanje
     public bool GameRunning => gameRunning;
     private bool sequenceFinished = false; // Kontrola za dozvolu klika na svjetla
     public bool SequenceFinished => sequenceFinished;
-    private bool answerGiven = true; // Kontrola da je odgovor veÊ odabran
+    private bool answerGiven = true; // Kontrola da je odgovor vec odabran
     public bool AnswerGiven => answerGiven;
     private Material originalFeedbackMaterial; // Pamti originalni materijal povratnog svjetla
     private Material endGameLightMaterial; // Pamti originalni materijal za endGameLight
-    private int correctAnswersCount = 0; // BrojaË toËnih odgovora
-    private bool successAchieved = false; // Status postignuÊa (5 toËnih odgovora)
+    private int correctAnswersCount = 0; // Brojac tocnih odgovora
+    private bool successAchieved = false; // Status postignuca (5 tocnih odgovora)
 
     
 
@@ -58,12 +58,47 @@ public class SimonSays : MonoBehaviour
     void Start()
     {
         // Generiraj sve permutacije
-        allSequences = GeneratePermutations(new[] { 0, 1, 2, 3 });
+        // allSequences = GeneratePermutations(new[] { 0, 1, 2, 3 });
+
+        // Zamijeniti generiranje permutacija s eksplicitnom listom
+        allSequences = new List<int[]>
+        {
+            new int[] { 1, 0, 2, 3 }, // red,blue,yellow,green -> red (1)
+            new int[] { 1, 0, 3, 2 }, // red,blue,green,yellow -> blue (0)
+            new int[] { 1, 2, 0, 3 }, // red,yellow,blue,green -> red (1)
+            new int[] { 1, 2, 3, 0 }, // red,yellow,green,blue -> yellow (2)
+            new int[] { 1, 3, 0, 2 }, // red,green,blue,yellow -> green (3)
+            new int[] { 1, 3, 2, 0 }, // red,green,yellow,blue -> blue (0)
+            new int[] { 0, 1, 2, 3 }, // blue,red,yellow,green -> green (3)
+            new int[] { 0, 1, 3, 2 }, // blue,red,green,yellow -> blue (0)
+            new int[] { 0, 2, 1, 3 }, // blue,yellow,red,green -> yellow (2)
+            new int[] { 0, 2, 3, 1 }, // blue,yellow,green,red -> red (1)
+            new int[] { 0, 3, 1, 2 }, // blue,green,red,yellow -> green (3)
+            new int[] { 0, 3, 2, 1 }, // blue,green,yellow,red -> blue (0)
+            new int[] { 2, 1, 0, 3 }, // yellow,red,blue,green -> red (1)
+            new int[] { 2, 1, 3, 0 }, // yellow,red,green,blue -> yellow (2)
+            new int[] { 2, 0, 1, 3 }, // yellow,blue,red,green -> green (3)
+            new int[] { 2, 0, 3, 1 }, // yellow,blue,green,red -> blue (0)
+            new int[] { 2, 3, 1, 0 }, // yellow,green,red,blue -> red (1)
+            new int[] { 2, 3, 0, 1 }, // yellow,green,blue,red -> green (3)
+            new int[] { 3, 1, 0, 2 }, // green,red,blue,yellow -> green (3)
+            new int[] { 3, 1, 2, 0 }, // green,red,yellow,blue -> yellow (2)
+            new int[] { 3, 0, 1, 2 }, // green,blue,red,yellow -> blue (0)
+            new int[] { 3, 0, 2, 1 }, // green,blue,yellow,red -> green (3)
+            new int[] { 3, 2, 1, 0 }, // green,yellow,red,blue -> yellow (2)
+            new int[] { 3, 2, 0, 1 }  // green,yellow,blue,red -> red (1)
+        };
+
+        // Toƒçni odgovori koji odgovaraju gornjim permutacijama
+        correctAnswers = new int[] 
+        {
+            1, 0, 1, 2, 3, 0, 3, 0, 2, 1, 3, 0, 1, 2, 3, 0, 1, 3, 3, 2, 0, 3, 2, 1
+        };
 
         // Provjeri je li broj odgovora tocno 24
         if (correctAnswers.Length != allSequences.Count)
         {
-            Debug.LogError($"Broj odgovora ({correctAnswers.Length}) mora biti toËno {allSequences.Count}.");
+            Debug.LogError($"Broj odgovora ({correctAnswers.Length}) mora biti tocno {allSequences.Count}.");
             return;
         }
 
@@ -147,10 +182,10 @@ public class SimonSays : MonoBehaviour
             // Cekaj ovisno o faktoru ubrzanja
             yield return new WaitForSeconds(1f / speedMultiplier);
 
-            lightCube.cube.GetComponent<Renderer>().material = lightCube.defaultMaterial; // VraÊanje na originalni crni materijal
+            lightCube.cube.GetComponent<Renderer>().material = lightCube.defaultMaterial; // VraÔøΩanje na originalni crni materijal
             lightCube.cube.GetComponent<Light>().enabled = false;
 
-            // Pauza izmeu bljeskanja
+            // Pauza izmedu bljeskanja
             yield return new WaitForSeconds(0.5f / speedMultiplier);
         }
 
@@ -194,7 +229,7 @@ public class SimonSays : MonoBehaviour
 
     IEnumerator ShowFeedback(bool isCorrect)
     {
-        // UkljuËivanje svjetla za povratnu informaciju
+        // Ukljucivanje svjetla za povratnu informaciju
         Light lightComponent = feedbackLight.GetComponent<Light>();
         Renderer renderer = feedbackLight.GetComponent<Renderer>();
 
@@ -237,6 +272,24 @@ public class SimonSays : MonoBehaviour
         }
     }
 
+    private int[] RemoveAtIndex(int[] array, int index)
+    {
+        if (array == null || index < 0 || index >= array.Length)
+        {
+            return array; // Vracamo isti niz ako je index nevazeci
+        }
+
+        // Uklanjanje indeksa na koji se tocno odgorilo
+        int[] newArray = new int[array.Length - 1];
+        for (int i = 0, j = 0; i < array.Length; i++)
+        {
+            if (i == index) continue;
+            newArray[j++] = array[i];
+        }
+        return newArray;
+    }
+
+    // Sve funkcije ispod nisu potrebne
     List<int[]> GeneratePermutations(int[] array)
     {
         var results = new List<int[]>();
@@ -259,23 +312,6 @@ public class SimonSays : MonoBehaviour
                 (array[l], array[i]) = (array[i], array[l]);
             }
         }
-    }
-
-    private int[] RemoveAtIndex(int[] array, int index)
-    {
-        if (array == null || index < 0 || index >= array.Length)
-        {
-            return array; // VraÊamo isti niz ako je index nevazeci
-        }
-
-        // Uklanjanje indeksa na koji se tocno odgorilo
-        int[] newArray = new int[array.Length - 1];
-        for (int i = 0, j = 0; i < array.Length; i++)
-        {
-            if (i == index) continue;
-            newArray[j++] = array[i];
-        }
-        return newArray;
     }
 
 }
