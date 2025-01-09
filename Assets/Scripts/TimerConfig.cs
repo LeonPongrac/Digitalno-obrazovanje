@@ -12,6 +12,10 @@ public class TimerConfig : MonoBehaviour
     private System.TimeSpan currentTime;
     private bool timerRunning = false;
 
+    // Event to notify when the timer reaches 0
+    public delegate void TimerEnded();
+    public event TimerEnded OnTimerEnd;
+
     // Update is called once per frame
     void Update()
     {
@@ -23,6 +27,7 @@ public class TimerConfig : MonoBehaviour
             {
                 currentTime = System.TimeSpan.Zero;
                 StopTimer();
+                OnTimerEnd?.Invoke();
             }
 
             //Debug.Log(currentTime.ToString());
@@ -43,6 +48,20 @@ public class TimerConfig : MonoBehaviour
     public void StopTimer()
     {
         timerRunning = false;
+    }
+
+    public void SubtractTime(float timeInSeconds)
+    {
+        currentTime = currentTime.Subtract(System.TimeSpan.FromSeconds(timeInSeconds));
+
+        if (currentTime.TotalSeconds <= 0)
+        {
+            currentTime = System.TimeSpan.Zero;
+            StopTimer();
+            OnTimerEnd?.Invoke();
+        }
+
+        UpdateTimerDisplay();
     }
 
     private void UpdateTimerDisplay()

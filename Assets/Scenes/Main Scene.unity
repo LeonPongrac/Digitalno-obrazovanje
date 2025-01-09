@@ -2873,7 +2873,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.46666667}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.9490196}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3621,7 +3621,6 @@ MonoBehaviour:
   correctMaterial: {fileID: 2100000, guid: 4d88cb4434d26824c840c1b6f314afd6, type: 2}
   incorrectMaterial: {fileID: 2100000, guid: 34806eb92cdd97647a4e2ce210edb00d, type: 2}
   endGameLightSuccessMaterial: {fileID: 2100000, guid: 8b5c4cbea9bf09a4c99471cca5b59d3e, type: 2}
-  correctAnswers: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!1 &1407298607
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,10 +6,15 @@ public class WireHandler : MonoBehaviour
 {
     public int id;
     public bool solution = false;
+    public bool canBePressd = false;
 
     private void OnMouseDown()
     {
-        PuzzleConfig p = this.GetComponentInParent<PuzzleConfig>();
-        p.result(solution);
+        if (canBePressd)
+        {
+            PuzzleConfig p = this.GetComponentInParent<PuzzleConfig>();
+            p.result(solution);
+        }        
     }
+
 }

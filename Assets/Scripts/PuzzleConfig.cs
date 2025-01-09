@@ -15,6 +15,7 @@ public class PuzzleConfig : MonoBehaviour
 {
     // List to store the wires
     private List<GameObject> allWires = new List<GameObject>();
+    private List<GameObject> wires = new List<GameObject>();
 
     private TextMeshProUGUI serialNumber;
 
@@ -30,6 +31,9 @@ public class PuzzleConfig : MonoBehaviour
 
     int numberOfWires = 3;
     int logic;
+
+    public delegate void PuzzleGameEnd();
+    public event PuzzleGameEnd OnGameEnd;
 
     // Myb need too also automaticly find materials
     void Start()
@@ -82,12 +86,12 @@ public class PuzzleConfig : MonoBehaviour
 
     private void PlaceWires(int numberOfWires)
     {
-        List<GameObject> wires = new List<GameObject>();
         for (int i = 0; i < numberOfWires; i++)
         {
             allWires[i].SetActive(true);
             setWireId(i, allWires[i]);
             wires.Add(allWires[i]);
+            setCanBePressd(true, allWires[i]);
         }
         for (int i = numberOfWires; i < allWires.Count; i++)
         {
@@ -329,6 +333,19 @@ public class PuzzleConfig : MonoBehaviour
         }
     }
 
+    void setCanBePressd(bool canBePressd ,GameObject wire)
+    {
+        WireHandler wireHandler = wire.GetComponent<WireHandler>();
+        if (wireHandler != null)
+        {
+            wireHandler.canBePressd = canBePressd;
+            if (canBePressd == false)
+            {
+                wire.tag = "Untagged";
+            }
+        }
+    }
+
     void setWireSolution(bool wireWin, GameObject wire)
     {
         WireHandler wireHandler = wire.GetComponent<WireHandler>();
@@ -343,6 +360,11 @@ public class PuzzleConfig : MonoBehaviour
         if (result)
         {
             blinkLight.LightLamp(Color.green);
+            foreach (var item in wires)
+            {
+                setCanBePressd(false, item);
+            }
+            OnGameEnd?.Invoke();
             Debug.Log("Win");
         }
         else
