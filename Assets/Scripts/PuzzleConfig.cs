@@ -20,6 +20,8 @@ public class PuzzleConfig : MonoBehaviour
 
     private BlinkLight blinkLight;
 
+    private StartGameConfig startGameConfig;
+
     public Material WireRed;
     public Material WireBlack;
     public Material WireBlue;
@@ -68,6 +70,11 @@ public class PuzzleConfig : MonoBehaviour
             Debug.LogError("No GameObject with the name 'SerialNumber' was found!");
         }
 
+        startGameConfig = GameObject.Find("GameLogic").GetComponent<StartGameConfig>();
+    }
+
+    public void StartGame() { 
+
         // Place wires
         numberOfWires = Random.Range(3, 7);//3 or 4, (3,7) -> 3,4,5,6
         PlaceWires(numberOfWires);
@@ -100,7 +107,7 @@ public class PuzzleConfig : MonoBehaviour
 
         foreach (var mat in assignMaterials)
         {
-            Debug.Log(mat.name);
+            //Debug.Log(mat.name);
         }
 
         switch (numberOfWires)
@@ -341,6 +348,7 @@ public class PuzzleConfig : MonoBehaviour
         else
         {
             blinkLight.LightLamp(Color.red);
+            startGameConfig.AddStrike();
             Debug.Log("Loss");
         }
     }
