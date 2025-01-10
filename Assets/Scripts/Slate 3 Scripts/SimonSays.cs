@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SimonSays : MonoBehaviour
 {
+    [SerializeField]
+    public StartGameConfig startGameConfig;
+    
     [System.Serializable]
     public class LightCube
     {
@@ -24,7 +27,7 @@ public class SimonSays : MonoBehaviour
             }
         }
     }
-
+    
     public LightCube[] lights;
     public GameObject startButton;
     public GameObject feedbackLight;
@@ -51,10 +54,6 @@ public class SimonSays : MonoBehaviour
     private bool successAchieved = false; // Status postignuca (5 tocnih odgovora)
 
     
-
-
-
-
     void Start()
     {
         // Generiraj sve permutacije
@@ -218,6 +217,7 @@ public class SimonSays : MonoBehaviour
                 {
                     Debug.Log("Incorrect");
                     StartCoroutine(ShowFeedback(false));
+                    startGameConfig.AddStrike();
                 }
 
                 sequenceFinished = false;
@@ -225,7 +225,6 @@ public class SimonSays : MonoBehaviour
             }
         }
     }
-
 
     IEnumerator ShowFeedback(bool isCorrect)
     {
