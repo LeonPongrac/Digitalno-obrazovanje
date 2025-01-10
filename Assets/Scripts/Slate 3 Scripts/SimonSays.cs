@@ -6,7 +6,7 @@ public class SimonSays : MonoBehaviour
 {
     [SerializeField]
     public StartGameConfig startGameConfig;
-    
+
     [System.Serializable]
     public class LightCube
     {
@@ -52,7 +52,6 @@ public class SimonSays : MonoBehaviour
     private Material endGameLightMaterial; // Pamti originalni materijal za endGameLight
     private int correctAnswersCount = 0; // Brojac tocnih odgovora
     private bool successAchieved = false; // Status postignuca (5 tocnih odgovora)
-
     
     void Start()
     {

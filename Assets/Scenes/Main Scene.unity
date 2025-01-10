@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17323539, g: 0.16459554, b: 0.2966911, a: 1}
+  m_IndirectSpecularColor: {r: 0.17316318, g: 0.16457182, b: 0.29665613, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -243,6 +243,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   solution: 0
+  canBePressd: 0
 --- !u!1001 &19630359
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -620,6 +621,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeToSet: 60
+  puzzleSolved: 0
 --- !u!4 &305535987
 Transform:
   m_ObjectHideFlags: 0
@@ -2217,6 +2219,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   solution: 0
+  canBePressd: 0
 --- !u!1001 &812847222
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2394,6 +2397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   solution: 0
+  canBePressd: 0
 --- !u!1 &951568001
 GameObject:
   m_ObjectHideFlags: 0
@@ -2635,6 +2639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeToSet: 0
+  puzzleSolved: 0
 --- !u!114 &963194232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3602,6 +3607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe144c288266d924c8754a0af4e94b48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startGameConfig: {fileID: 305535986}
   lights:
   - cube: {fileID: 1694746106}
     highlightMaterial: {fileID: 2100000, guid: 7d219e8e93e696441849a196d07d0f5d, type: 2}
@@ -3974,6 +3980,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   solution: 0
+  canBePressd: 0
 --- !u!1001 &1480006032
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4737,6 +4744,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   solution: 0
+  canBePressd: 0
 --- !u!1001 &1760299882
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6300,6 +6308,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   solution: 0
+  canBePressd: 0
 --- !u!1 &2063811519
 GameObject:
   m_ObjectHideFlags: 0
